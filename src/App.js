@@ -1,24 +1,17 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import useGet from './useGet';
+
+const url = 'https://mymoney-pauloteixeira.firebaseio.com/movimentacoes/2020-06.json'
 
 function App() {
+  const data = useGet(url)
+  const data2 = useGet('http://httpbin.org/ip')
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>MyMoney</h1>
+      { JSON.stringify(data) }
+      { data.loading && <p>Loading...</p> }
+      <pre>{ JSON.stringify(data2) }</pre>
     </div>
   );
 }
