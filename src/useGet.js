@@ -20,22 +20,22 @@ const reducer = (state, action) => {
     return state
 }
 const useGet = url => {
-    const [data, dispatch] = useReducer(reducer, {
-      loading: true,
-      data: {}
-    })
-    useEffect(() => {
-      dispatch({ type: 'REQUEST' })
-      axios
-        .get(url)
-        .then(res => {
-          // setData({
-          //   loading: false,
-          //   data: res.data
-          // })
-          dispatch({ type: 'SUCCESS', data: res.data })
-        })
-    }, [])
-    return data
-  }
+  const [data, dispatch] = useReducer(reducer, {
+    loading: true,
+    data: {}
+  })
+  useEffect(() => {
+    dispatch({ type: 'REQUEST' })
+    axios
+      .get(url)
+      .then(res => {
+        // setData({
+        //   loading: false,
+        //   data: res.data
+        // })
+        dispatch({ type: 'SUCCESS', data: res.data })
+      })
+  }, [])
+  return data
+}
   export default useGet
