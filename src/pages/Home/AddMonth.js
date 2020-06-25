@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AdicionarMes = () => {
+const AddMonth = () => {
     return (
         <React.Fragment>
             <h2>Adicionar mês</h2>
@@ -17,4 +17,4 @@ const AdicionarMes = () => {
     )
 }
 
-export default AdicionarMes
+export default AddMonth
