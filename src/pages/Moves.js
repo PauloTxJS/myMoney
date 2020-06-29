@@ -10,24 +10,26 @@ const Moves = ({ match }) => {
     const [postData, save] = usePost(`movimentacoes/${match.params.data}`)
     const [removeData, remove] = useDelete()
     const [description, setDescription] = useState('')
-    const [value, setValue] = useState(0.0)
+    const [value, setValue] = useState('')
     
     const onChangeDescription = evt => {
         setDescription(evt.target.value);
     } 
 
     const onChangeValue = evt => {
-        setValue( parseFloat(evt.target.value) );
+        setValue(evt.target.value);
     }
     
     const saveMoves = async() => {
-        await save({
-            descricao: description,
-            valor: value  
-        })
-        setDescription('')
-        setValue(0)
-        data.refetch()
+        if (!isNaN(value) && value.search(/^[-]?\d+(\.)?\d+?$/) >= 0){
+            await save({
+                descricao: description,
+                valor: parseFloat(value)  
+            })
+            setDescription('') 
+            setValue(0)
+            data.refetch()
+        }
     }
 
     const removeMoves = async(id) => {
@@ -51,13 +53,13 @@ const Moves = ({ match }) => {
                             .keys(data.data)
                             .map(moves => {
                                 return (
-                                    <tr>
+                                    <tr key={moves}>
                                         <td>
                                             {data.data[moves].descricao}
                                         </td>
-                                        <td>
-                                            {data.data[moves].valor}
-                                            <button onClick={() => removeMoves(moves)}>-</button>
+                                        <td className='text-right'>
+                                            {data.data[moves].valor} {' '}
+                                            <button className='btn btn-danger' onClick={() => removeMoves(moves)}>-</button>
                                         </td>
                                     </tr>
                                 )
@@ -68,8 +70,8 @@ const Moves = ({ match }) => {
                             <input type='text' value={description} onChange={onChangeDescription}/>
                         </td>
                         <td>
-                            <input type='text' value={value} onChange={onChangeValue}/>
-                            <button onClick={saveMoves}>+</button>
+                            <input type='text' value={value} onChange={onChangeValue}/>&ensp;
+                            <button className='btn btn-success' onClick={saveMoves}>+</button>
                         </td>
                     </tr>
                 </tbody>
