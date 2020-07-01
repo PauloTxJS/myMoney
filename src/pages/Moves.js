@@ -7,6 +7,7 @@ const { useGet, usePost, useDelete } = Rest(baseURL)
 
 const Moves = ({ match }) => {
     const data = useGet(`movimentacoes/${match.params.data}`)
+    const dataMonths = useGet(`meses/${match.params.data}`)
     const [postData, save] = usePost(`movimentacoes/${match.params.data}`)
     const [removeData, remove] = useDelete()
     const [description, setDescription] = useState('')
@@ -29,17 +30,27 @@ const Moves = ({ match }) => {
             setDescription('') 
             setValue(0)
             data.refetch()
+            await sleep(5000)
+            dataMonths.refetch()
         }
     }
 
+    const sleep = time => new Promise(resolve => setTimeout(resolve, time))
     const removeMoves = async(id) => {
         await remove(`movimentacoes/${match.params.data}/${id}`)
-        data.refetch()
+        data.refetch()        
     }
     
     return (
         <div className='container'>
             <h1>Movimentações</h1>
+            {
+                !dataMonths.loading && <div>
+                    Previsão entrada: {dataMonths.data.previsao_entrada} / Previsão saída: {dataMonths.data.previsao_saida} <br />
+                    Entradas: {dataMonths.data.entradas} / Saídas: {dataMonths.data.saidas}
+                    
+                </div>
+            }
             <table className='table'>
                 <thead>
                     <tr>

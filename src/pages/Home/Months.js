@@ -36,9 +36,9 @@ const Months = () => {
                                 <tr key={month}>
                                     <td><Link to={`/movimentacoes/${month}`}>{month}</Link></td>
                                     <td>{data.data[month].previsao_entrada}</td>
-                                    <td>{data.data[month].entrada}</td>
+                                    <td>{data.data[month].entradas}</td>
                                     <td>{data.data[month].previsao_saida}</td>
-                                    <td>{data.data[month].saida}</td>
+                                    <td>{data.data[month].saidas}</td>
                                 </tr>
                             )
                         })
