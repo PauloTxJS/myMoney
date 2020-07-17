@@ -13,7 +13,7 @@ const Login = () => {
     const login = async() => {
         await signin({
             email: "paulo.debian.js@gmail.com",
-            password: "abc123",
+            password: "abc1231",
             returnSecureToken: true 
         })
     }
