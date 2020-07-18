@@ -7,11 +7,14 @@ const baseURL = 'https://mymoney-pauloteixeira.firebaseio.com/'
 const { useGet, usePost, useDelete, usePatch } = Rest(baseURL)
 
 const Moves = ({ match }) => {
-    const data = useGet(`movimentacoes/${match.params.data}`)
-    const dataMonths = useGet(`meses/${match.params.data}`)
-    const [dataPatch, patch] = usePatch()
-    const [postData, save] = usePost(`movimentacoes/${match.params.data}`)
-    const [removeData, remove] = useDelete()
+    const infoMonth = useGet(`meses/${match.params.data}`)
+    const [dataPatch, changeMonth] = usePatch(`meses/${match.params.data}`)
+
+    const moves = useGet(`movimentacoes/${match.params.data}`)
+    const [postData, saveNewMoves] = usePost(`movimentacoes/${match.params.data}`)
+    const [removeData, removeMoves] = useDelete()
+
+    //Form management
     const [description, setDescription] = useState('')
     const [value, setValue] = useState('')
     
@@ -26,35 +29,35 @@ const Moves = ({ match }) => {
     
     const saveMoves = async() => {
         if (!isNaN(value) && value.search(/^[-]?\d+(\.)?\d+?$/) >= 0){
-            await save({
+            await saveNewMoves({
                 descricao: description,
                 valor: parseFloat(value)  
             })
             setDescription('') 
             setValue(0)
-            data.refetch()
+            moves.refetch()
             await sleep(5000)
-            dataMonths.refetch()
+            infoMonth.refetch()
         }
     }
 
     const sleep = time => new Promise(resolve => setTimeout(resolve, time))
-    const removeMoves = async(id) => {
-        await remove(`movimentacoes/${match.params.data}/${id}`)
-        data.refetch()
+    const removeMovesClick = async(id) => {
+        await removeMoves(`movimentacoes/${match.params.data}/${id}`)
+        moves.refetch()
         await sleep(5000)
-        dataMonths.refetch()        
+        infoMonth.refetch()        
     }
 
     const changeInputForecast = (evt) => {
-        patch(`meses/${match.params.data}`, { previsao_entrada: evt.target.value})
+        changeMonth({ previsao_entrada: evt.target.value})
     }
     
     const changeExitForecast = (evt) => {
-        patch(`meses/${match.params.data}`, { previsao_saida: evt.target.value})
+        changeMonth({ previsao_saida: evt.target.value})
     }
 
-    if(data.error === 'Permission denied') {
+    if(moves.error === 'Permission denied') {
         return <Redirect to='/login'/>
     }
     
@@ -62,9 +65,9 @@ const Moves = ({ match }) => {
         <div className='container'>
             <h1>Movimentações</h1>
             {
-                !dataMonths.loading && dataMonths.data && <div>
-                    <span>Previsão entrada: {dataMonths.data.previsao_entrada}</span> <input type='text' onBlur={changeInputForecast}/> / Previsão saída: {dataMonths.data.previsao_saida} <input type='text' onBlur={changeExitForecast}/> <br />
-                    Entradas: {dataMonths.data.entradas} / Saídas: {dataMonths.data.saidas}
+                !infoMonth.loading && infoMonth.data && <div>
+                    <span>Previsão entrada: {infoMonth.data.previsao_entrada}</span> <input type='text' onBlur={changeInputForecast}/> / Previsão saída: {infoMonth.data.previsao_saida} <input type='text' onBlur={changeExitForecast}/> <br />
+                    Entradas: {infoMonth.data.entradas} / Saídas: {infoMonth.data.saidas}
                     
                 </div>
             }
@@ -76,18 +79,18 @@ const Moves = ({ match }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    { data.data &&   
+                    { moves.data &&   
                         Object
-                            .keys(data.data)
+                            .keys(moves.data)
                             .map(moves => {
                                 return (
                                     <tr key={moves}>
                                         <td>
-                                            {data.data[moves].descricao}
+                                            {moves.data[moves].descricao}
                                         </td>
                                         <td className='text-right'>
-                                            {data.data[moves].valor} {' '}
-                                            <button className='btn btn-danger' onClick={() => removeMoves(moves)}>-</button>
+                                            {moves.data[moves].valor} {' '}
+                                            <button className='btn btn-danger' onClick={() => removeMovesClick(moves)}>-</button>
                                         </td>
                                     </tr>
                                 )
