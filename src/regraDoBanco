@@ -1,0 +1,6 @@
+{
+  "rules": {
+    ".read": "auth.provider == 'password'",
+    ".write": "auth.uid == 'VLHtI8jV3wOuQ2RHDbjlCpSUR2F3'"
+  }
+}
