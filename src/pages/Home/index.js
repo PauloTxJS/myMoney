@@ -5,8 +5,8 @@ import AddMonth from './AddMonth';
 const Home = () => {
     return (
         <div className='container'>
-        <AddMonth />
-        <Months />
+            <AddMonth />
+            <Months />
         </div>
     )
 }
